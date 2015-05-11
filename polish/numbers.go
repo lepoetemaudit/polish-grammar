@@ -2,7 +2,6 @@ package polish
 
 import (
 	"fmt"
-	"time"
 )
 
 type DateOptions struct {
@@ -29,26 +28,105 @@ var CaseNames = []string{
 	"vocative",
 }
 
+var Months = map[int][]string{
+	Nominative: []string{
+		"styczeń",
+		"luty",
+		"marzec",
+		"kwiecień",
+		"maj",
+		"czerwiec",
+		"lipiec",
+		"sierpień",
+		"wrzesień",
+		"październik",
+		"listopad",
+		"grudzień",
+	},
+
+	Genitive: []string{
+		"stycznia",
+		"lutego",
+		"marcu",
+		"kwietnia",
+		"maja",
+		"czerwca",
+		"lipca",
+		"sierpnia",
+		"września",
+		"pażdziernika",
+		"listopada",
+		"grudnia",
+	},
+
+	Instrumental: []string{
+		"styczniu",
+		"lutym",
+		"marcu",
+		"kwietniu",
+		"maju",
+		"czerwcu",
+		"wrześniu",
+		"pażdziernik",
+		"listopadzie",
+		"grudnie",
+	},
+}
+
+// Dates by themselves use the masculine ordinal number
+var DateOrdinals = map[int][]string{
+	Nominative: []string{
+		"zero",
+		"pierwszy",
+		"drugi",
+		"trzeci",
+		"czwarty",
+		"piąty",
+		"szósty",
+		"siódmy",
+		"ósmy",
+		"dziewiąty",
+		"dziesiąty",
+		"jedenasty",
+		"dwunasty",
+		"trzynasty",
+		"czternasty",
+		"piętnasty",
+		"szesnasty",
+		"siedemnasty",
+		"osiemnasty",
+		"dziewiętynasty",
+		"dwudziesty",
+		"dwudziesty pierwszy",
+		"dwudziesty drugi",
+		"dwudziesty trzeci",
+		"dwudziesty czwarty",
+		"dwudziesty piąty",
+		"dwudziesty szósty",
+		"dwudziesty siódmy",
+		"dwudziesty ósmy",
+		"dwudziesty dziewiąty",
+		"trzydziesty",
+		"trzydziesty pierwszy",
+	},
+}
+
 func GetCaseName(nounCase int) string {
 	return CaseNames[nounCase]
 }
 
-func GetPolishDate(date time.Time, nounCase int) (string, error) {
-	supportedCases := []int{Nominative, Genitive, Instrumental}
-	supported := false
-
-	for _, c := range supportedCases {
-		if nounCase == c {
-			supported = true
-			break
-		}
+func GetPolishDate(day int, month int, standAlone bool) (string, error) {
+	var dayCase int
+	if standAlone {
+		dayCase = Nominative
+	} else {
+		dayCase = Genitive
 	}
+	dayString := DateOrdinals[dayCase][day]
+	monthString := Months[Genitive][month-1]
+	dateString := fmt.Sprintf("%s %s", dayString, monthString)
 
-	if !supported {
-		return "", fmt.Errorf("Unsupported number case: %s", GetCaseName(nounCase))
-	}
-
-	return "nope", nil
+	return dateString, nil
 }
 
 func DateQuiz(options DateOptions) (string, string) {
