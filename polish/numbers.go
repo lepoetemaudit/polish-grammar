@@ -2,11 +2,9 @@ package polish
 
 import (
 	"fmt"
+	"math/rand"
+	"time"
 )
-
-type DateOptions struct {
-	toPolish bool
-}
 
 const (
 	Nominative = iota
@@ -163,9 +161,17 @@ func GetPolishDate(day int, month int, standAlone bool) (string, error) {
 	return dateString, nil
 }
 
-func DateQuiz(options DateOptions) (string, string) {
+func DateQuiz() (string, string) {
 	// TODO: if options is nil, allow randoms
 
-	// For now, assume dates between 1000 and 2050
-	return "nope", "nope"
+	utc, _ := time.LoadLocation("utc")
+
+	// 2016 is a leap year
+	startDate := time.Date(2016, 1, 1, 0, 0, 0, 0, utc)
+	dayAppend := rand.Int() % 366
+	finalDate := startDate.AddDate(0, 0, dayAppend)
+
+	const layout = "_2 January"
+	dateString, _ := GetPolishDate(finalDate.Day(), int(finalDate.Month()), false)
+	return finalDate.Format(layout), dateString
 }

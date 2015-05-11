@@ -39,5 +39,8 @@ func TestGetPolishDate(t *testing.T) {
 			t.Fatalf("Expected '%s' but got: '%s'", expected, str)
 		}
 	}
+}
 
+func TestDateQuiz(t *testing.T) {
+	_, _ = DateQuiz()
 }
