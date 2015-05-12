@@ -164,7 +164,7 @@ func GetPolishDate(day int, month int, standAlone bool) (string, error) {
 func DateQuiz() (string, string) {
 	// TODO: if options is nil, allow randoms
 
-	utc, _ := time.LoadLocation("utc")
+	utc, _ := time.LoadLocation("UTC")
 
 	// 2016 is a leap year
 	startDate := time.Date(2016, 1, 1, 0, 0, 0, 0, utc)
