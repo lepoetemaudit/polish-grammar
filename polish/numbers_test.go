@@ -6,7 +6,26 @@ import (
 
 func TestGetCaseName(t *testing.T) {
 	if GetCaseName(Instrumental) != "instrumental" {
-		t.Fatalf("Expected 'instrumental', got '%s'\n", GetCaseName(Instrumental))
+		t.Fatalf("Expected 'instrumental', got '%s'\n",
+			GetCaseName(Instrumental))
+	}
+}
+
+func TestGetPolishYear(t *testing.T) {
+	var standAloneYears = map[int]string{
+		1999: "tysiąc dziewięćset dziewięćdziesiąt dziewięć",
+		50:   "pięćdziesiąt",
+		1766: "tysiąc siedemset sześćdziesiąt sześć",
+		1254: "tysiąc dwieście pięćdziesiąt cztery",
+		2055: "dwa tysiąc pięćdziesiąt pięć",
+		2008: "dwa tysiąc osiem",
+		2000: "dwutysięczny",
+	}
+
+	for year, expected := range standAloneYears {
+		if result, _ := GetPolishYear(year, true); result != expected {
+			t.Fatalf("Expected '%s' but got '%s'", expected, result)
+		}
 	}
 }
 

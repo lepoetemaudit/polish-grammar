@@ -3,6 +3,7 @@ package polish
 import (
 	"fmt"
 	"math/rand"
+	"strings"
 	"time"
 )
 
@@ -16,6 +17,8 @@ const (
 	Vocative
 )
 
+type NounCase int
+
 var CaseNames = []string{
 	"nominative",
 	"accusative",
@@ -26,7 +29,7 @@ var CaseNames = []string{
 	"vocative",
 }
 
-var Months = map[int][]string{
+var Months = map[NounCase][]string{
 	Nominative: []string{
 		"styczeń",
 		"luty",
@@ -71,8 +74,63 @@ var Months = map[int][]string{
 	},
 }
 
+var NumberCardinalsZeroToTwenty = map[NounCase][]string{
+	Nominative: []string{
+		"zero",
+		"jeden",
+		"dwa",
+		"trzy",
+		"cztery",
+		"pięć",
+		"sześć",
+		"siedem",
+		"osiem",
+		"dziewięć",
+		"dziesięć",
+		"jedenaście",
+		"dwanaście",
+		"trzynaście",
+		"czternaście",
+		"piętnaście",
+		"szesnaście",
+		"siedemnaście",
+		"osiemnaście",
+		"dziewięćnaście",
+	},
+}
+
+var NumberCardinalsTens = map[NounCase][]string{
+	Nominative: []string{
+		"zero",
+		"dziesięc",
+		"dwadzieścia",
+		"trzydzieści",
+		"czterdzieści",
+		"pięćdziesiąt",
+		"sześćdziesiąt",
+		"siedemdziesiąt",
+		"osiemdziesiąt",
+		"dziewięćdziesiąt",
+	},
+}
+
+var NumberCardinalsHundreds = map[NounCase][]string{
+	Nominative: []string{
+		"zero",
+		"sto",
+		"dwieście",
+		"trzysta",
+		"czterysta",
+		"pięcset",
+		"sześcset",
+		"siedemset",
+		"osiemset",
+		"dziewięćset",
+	},
+}
+
 // Dates by themselves use the masculine ordinal number
-var DateOrdinals = map[int][]string{
+var DateOrdinals = map[NounCase][]string{
 	Nominative: []string{
 		"zero",
 		"pierwszy",
@@ -143,12 +201,64 @@ var DateOrdinals = map[int][]string{
 	},
 }
 
-func GetCaseName(nounCase int) string {
+func GetPolishYear(year int, standAlone bool) (string, error) {
+	if year < 1 || year > 2999 {
+		return "", fmt.Errorf("Bad year given: %d", year)
+	}
+
+	var yearCase NounCase
+
+	if standAlone {
+		yearCase = Nominative
+	} else {
+		yearCase = Genitive
+	}
+
+	parts := make([]string, 0, 8)
+
+	// Two thousand = special case
+	if year == 2000 {
+		return "dwutysięczny", nil
+	}
+
+	// Append thousands (always nominative)
+	if year > 2000 {
+		parts = append(parts, "dwa tysiąc")
+	} else if year > 1000 {
+		parts = append(parts, "tysiąc")
+	}
+
+	// Append century (always nominative)
+	century := (year % 1000) / 100
+	if century > 0 {
+		parts = append(parts, NumberCardinalsHundreds[Nominative][century])
+
+	}
+
+	decade := (year % 100) / 10
+	if decade > 1 {
+		parts = append(parts, NumberCardinalsTens[yearCase][decade])
+	}
+
+	yearInDecade := year % 10
+	if yearInDecade > 0 || decade == 1 {
+		finalYear := yearInDecade
+		if decade == 1 {
+			finalYear += decade * 10
+		}
+
+		parts = append(parts, NumberCardinalsZeroToTwenty[yearCase][finalYear])
+	}
+
+	return strings.Join(parts, " "), nil
+}
+
+func GetCaseName(nounCase NounCase) string {
 	return CaseNames[nounCase]
 }
 
 func GetPolishDate(day int, month int, standAlone bool) (string, error) {
-	var dayCase int
+	var dayCase NounCase
 	if standAlone {
 		dayCase = Nominative
 	} else {
