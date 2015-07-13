@@ -97,6 +97,26 @@ var NumberCardinalsZeroToTwenty = map[NounCase][]string{
 		"osiemnaście",
 		"dziewięćnaście",
 	},
+	Genitive: []string{
+		"zero",
+		"jednego",
+		"dwóch",
+		"trzech",
+		"czterech",
+		"pięciu",
+		"sześciu",
+		"siedmiu",
+		"ośmiu",
+		"dziewięciu",
+		"dwunastu",
+		"trzynastu",
+		"czternastu",
+		"piętnastu",
+		"szesnastu",
+		"siedemnastu",
+		"osiemnastu",
+		"dziewięcnastu",
+	},
 }
 
 var NumberCardinalsTens = map[NounCase][]string{
@@ -111,6 +131,18 @@ var NumberCardinalsTens = map[NounCase][]string{
 		"siedemdziesiąt",
 		"osiemdziesiąt",
 		"dziewięćdziesiąt",
+	},
+	Genitive: []string{
+		"zero",
+		"diesięciu",
+		"dwudziestu",
+		"trzydziestu",
+		"czterdziestu",
+		"pięćdziesiątego",
+		"sześćdziesiątego",
+		"siedemdziesiątego",
+		"osiemdziesiątego",
+		"dziewięćdziesiątego",
 	},
 }
 
